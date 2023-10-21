@@ -51,23 +51,21 @@ start_button = st.button("Start")
 
 if start_button:
     if upload:
-        switch_page("Builder Tool")
-        st.write("## Upload")
-        st.write("You uploaded a file")
-
         bytes_data = uploaded_file.read()
         # write to datasets folder
         with open(os.path.join("datasets/", uploaded_file.name), "wb") as f:
             f.write(bytes_data)
+
+        st.session_state["selected_file"] = uploaded_file.name
         
+        switch_page("Builder Tool")        
         
-    elif existing:
+    elif existing:                
+
+        st.session_state["selected_file"] = selected_file
+
         switch_page("Builder Tool")
-        st.write("## Existing")
-        st.write("You selected a file")
-        st.empty()
     else:
-        switch_page("Builder Tool")
         st.write("## Error")
         st.write("You must select a file or upload a file")
 
