@@ -34,7 +34,7 @@ class Graph(component.component):
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             st.selectbox(
-                    "Select a graph type", ["Line", "Bar", "Pie"], 
+                    "Select a graph type", ["Line", "Bar"], 
                     key="type_"+self.uuid, 
                 )
             
@@ -43,7 +43,7 @@ class Graph(component.component):
 
             self.run = st.form_submit_button("Run")
 
-            st.write(st.session_state)
+            # st.write(st.session_state)
 
             if self.run:
                 self.run_graph()
@@ -59,9 +59,23 @@ class Graph(component.component):
 
 
 class GraphOutput(component.component):
-    def __init__(self, df, type):
+    def __init__(self, df, type, col1, col2):
         super().__init__(df)
         self.graph_type = type
+        self.col1 = col1
+        self.col2 = col2
 
     def display(self):
         st.write("### Graph Output")
+
+        if self.graph_type == "Line":
+            self.line_graph()
+        elif self.graph_type == "Bar":
+            self.bar_graph()
+    
+    def line_graph(self):
+        st.line_chart(data=self.df, x=self.col1, y=self.col2)
+
+    def bar_graph(self):
+        counts_df = self.df[self.col1].value_counts().reset_index()
+        st.bar_chart(data=counts_df, x=self.col1, y="count")
