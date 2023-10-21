@@ -4,6 +4,8 @@ import os
 
 import pandas as pd
 
+from components import Graph, Statistic, Model, NN
+
 st.markdown("# Builder Tool")
 #st.sidebar.markdown("# Builder Tool")
 
@@ -24,25 +26,27 @@ st.write("---")
 
 st.write("### Add Section")
 
-section_add_select = st.selectbox("Select a section type", ["Text", "Code", "Graph", "Table", "Image"])
+section_add_select = st.selectbox("Select a section type", ["Graph", "Statistic", "Model", "Neural Network"])
 
 add_button = st.button("Add Section")
 
+st.write("---")
+
+if "components" not in st.session_state:
+    st.session_state["components"] = []
+
 if add_button:
-    if section_add_select == "Text":
-        #st.write("Text")
-        with st.expander("Text"):
-            st.write("Extra")
-        st.write("---")
-    elif section_add_select == "Code":
-        st.write("Code")
-        st.write("---")
-    elif section_add_select == "Graph":
-        st.write("Graph")
-        st.write("---")
-    elif section_add_select == "Table":
-        st.write("Table")
-        st.write("---")
-    elif section_add_select == "Image":
-        st.write("Image")        
-        st.write("---")
+    if section_add_select == "Graph":
+        st.session_state["components"].append(Graph.Graph(df))
+    elif section_add_select == "Statistic":
+        st.session_state["components"].append(Statistic.Statistic(df))
+    elif section_add_select == "Model":
+        st.session_state["components"].append(Model.Model(df))
+    elif section_add_select == "Neural Network":
+        st.session_state["components"].append(NN.NeuralNetwork(df))
+
+print(st.session_state["components"])
+
+for component in st.session_state["components"]:
+    component.display()
+
