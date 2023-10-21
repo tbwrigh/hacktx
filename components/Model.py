@@ -2,11 +2,11 @@ from . import component
 
 import streamlit as st
 
-# from sklearn.linear_model import LinearRegression
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 class Model(component.component):
     def __init__(self, df):
@@ -26,11 +26,14 @@ class Model(component.component):
     def display(self):
         st.write("### Model")
 
+
+        st.selectbox(
+            "Select a model", ["Linear Regression", "Logistic Regression", "KNN", "Decision Tree", "Random Forest"], 
+            key="model_type_"+self.uuid, 
+        )
+        
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            st.selectbox(
-                    "Select a model", ["Linear Regression", "Logistic Regression", "KNN", "Decision Tree", "Random Forest"], 
-                    key="model_type_"+self.uuid, 
-                )
+            
             
             st.selectbox("Select Response Variable", self.df.columns, key="response_input_"+self.uuid)
 
