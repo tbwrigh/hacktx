@@ -43,7 +43,7 @@ if add_button:
     elif section_add_select == "Model":
         st.session_state["components"].append(Model.Model(df))
     elif section_add_select == "Neural Network":
-        st.session_state["components"].append(NN.NeuralNetwork(df))
+        st.session_state["components"].append(NN.NN(df))
 
 for component in st.session_state["components"]:
     component.display()
