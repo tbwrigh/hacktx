@@ -47,10 +47,6 @@ class Statistic(component.component):
 
         if self.output:
             self.output.display()
-        
-        if choice == "Mean":
-            df2 = self.df[column].mean()
-            st.write(df2)
 
         st.write("---")
 
@@ -59,9 +55,14 @@ class Statistic(component.component):
         self.output = StatisticOutput(self.df, st.session_state["type_"+self.uuid], st.session_state["col1_"+self.uuid])
 
 class StatisticOutput(component.component):
-    def __init__(self, df, type):
+    def __init__(self, df, type, col):
         super().__init__(df)
         self.stat_type = type
+        self.col = col
 
     def display(self):
         st.write("### Statistic Output")
+
+        if self.stat_type == "Mean":
+            df2 = self.df[self.col].mean()
+            st.write(df2)
