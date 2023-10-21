@@ -2,6 +2,7 @@ from . import component
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 class Statistic(component.component):
     def __init__(self, df):
@@ -32,7 +33,7 @@ class Statistic(component.component):
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             choice = st.selectbox(
-                    "Select a statistic", ["Mean", "Median", "Standard Deviation", "IQR", "Percentile"],
+                    "Select a statistic", ["IQR", "Mean", "Median", "Percentile", "Proportion", "Standard Deviation"],
                     key="type_"+self.uuid,
                 )
         
@@ -65,4 +66,20 @@ class StatisticOutput(component.component):
 
         if self.stat_type == "Mean":
             df2 = self.df[self.col].mean()
-            st.write(df2)
+            st.write(f"Mean: {df2}")
+        
+        elif self.stat_type == "Median":
+            df2 = self.df[self.col].median()
+            st.write(f"Median: {df2}")
+        
+        elif self.stat_type == "IQR":
+            Q3 = np.quantile(self.df[self.col], 0.75)
+            Q1 = np.quantile(self.df[self.col], 0.25)
+            IQR = Q3 - Q1
+            st.write(f"IQR: {IQR}")
+            st.write(f"Q1: {Q1}")
+            st.write(f"Q3: {Q3}")
+        
+        elif self.stat_type == "Standard Deviation":
+            df2 = self.df[self.col].std()
+            st.write(f"Standard Deviation: {df2}")
