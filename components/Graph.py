@@ -4,10 +4,13 @@ from . import component
 import streamlit as st
 
 class Graph(component.component):
+
     def __init__(self, df):
         super().__init__(df)
         print("Graph init")
         tmp = vars(self)
+
+        print(self.uuid)
 
         if "graph_type" not in tmp:
             self.graph_type = None
@@ -29,14 +32,14 @@ class Graph(component.component):
         if self.graph_type != None:
             print("here" + self.graph_type)
 
-        with st.form(key="form_"+self.count, clear_on_submit=False):
+        with st.form(key="form_"+self.uuid, clear_on_submit=False):
             st.selectbox(
                     "Select a graph type", ["Line", "Bar", "Pie"], 
-                    key="type_"+self.count, 
+                    key="type_"+self.uuid, 
                 )
             
-            st.selectbox("Select a column", self.df.columns, key="col1_"+self.count)
-            st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.count)
+            st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
+            st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.uuid)
 
             self.run = st.form_submit_button("Run")
 
@@ -52,7 +55,7 @@ class Graph(component.component):
     
     def run_graph(self):
         print(self.graph_type)
-        self.output = GraphOutput(self.df, st.session_state["type_"+self.count], st.session_state["col1_"+self.count], st.session_state["col2_"+self.count])
+        self.output = GraphOutput(self.df, st.session_state["type_"+self.uuid], st.session_state["col1_"+self.uuid], st.session_state["col2_"+self.uuid])
 
 
 class GraphOutput(component.component):
