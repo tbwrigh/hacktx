@@ -36,7 +36,6 @@ st.write("## Or Select a dataset from the list")
 files = os.listdir("datasets/")
 files = [file for file in files if os.path.isfile(os.path.join("datasets/", file))]
 files = ["None"] + files
-print(files)
 
 # create drop down  
 selected_file = st.selectbox("Select a dataset", files)
