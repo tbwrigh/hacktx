@@ -22,6 +22,8 @@ class Statistic(component.component):
             self.output = None
         if "col1" not in tmp:
             self.col1 = None
+        if "delete" not in tmp:
+            self.delete = None
 
     def display(self):
         print("Statistic display")
@@ -32,22 +34,28 @@ class Statistic(component.component):
             print("here" + self.stat_type)
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            choice = st.selectbox(
-                    "Select a statistic", ["IQR", "Mean", "Median", "Percentile", "Proportion", "Standard Deviation"],
+            st.selectbox(
+                    "Select a statistic", ["Mean", "Median", "Percentile", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
                     key="type_"+self.uuid,
                 )
         
-        #st.write("### Column")
         # select column
-            column = st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
+            st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
         
             self.run = st.form_submit_button("Run")
+            self.delete = st.form_submit_button("Delete")
 
             if self.run:
                 self.run_stat()
 
+            if self.delete:
+                st.form_submit_button(label="Delete", key="delete_"+self.uuid)
+
         if self.output:
             self.output.display()
+
+        if self.delete:
+            self.output = None
 
         st.write("---")
 
@@ -72,11 +80,9 @@ class StatisticOutput(component.component):
             df2 = self.df[self.col].median()
             st.write(f"Median: {df2}")
         
-        elif self.stat_type == "IQR":
+        elif self.stat_type == "Quartiles 1 and 3":
             Q3 = np.quantile(self.df[self.col], 0.75)
             Q1 = np.quantile(self.df[self.col], 0.25)
-            IQR = Q3 - Q1
-            st.write(f"IQR: {IQR}")
             st.write(f"Q1: {Q1}")
             st.write(f"Q3: {Q3}")
         
