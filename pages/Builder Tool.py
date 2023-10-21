@@ -30,7 +30,9 @@ add_button = st.button("Add Section")
 
 if add_button:
     if section_add_select == "Text":
-        st.write("Text")
+        #st.write("Text")
+        with st.expander("Text"):
+            st.write("Extra")
         st.write("---")
     elif section_add_select == "Code":
         st.write("Code")
