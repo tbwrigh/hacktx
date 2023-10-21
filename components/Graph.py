@@ -11,26 +11,17 @@ class Graph(component.component):
         tmp = vars(self)
 
         print(self.uuid)
-
-        if "graph_type" not in tmp:
-            self.graph_type = None
+        
         if "run" not in tmp:
             self.run = None
         if "output" not in tmp:
             self.output = None
-        if "col1" not in tmp:
-            self.col1 = None
-        if "col2" not in tmp:
-            self.col2 = None
 
 
     def display(self):
         print("Graph display")
         st.write("### Graph")
         # select graph type
-
-        if self.graph_type != None:
-            print("here" + self.graph_type)
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             st.selectbox(
@@ -54,7 +45,6 @@ class Graph(component.component):
         st.write("---")
     
     def run_graph(self):
-        print(self.graph_type)
         self.output = GraphOutput(self.df, st.session_state["type_"+self.uuid], st.session_state["col1_"+self.uuid], st.session_state["col2_"+self.uuid])
 
 
