@@ -2,6 +2,22 @@ from streamlit_extras.switch_page_button import switch_page
 import streamlit as st
 import os
 
+st.set_page_config(initial_sidebar_state="collapsed")
+
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none;
+    }
+    [data-testid="stSidebar"] {
+    display: none;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 st.write("# Welcome to Auto ML")
 
 st.write("## Upload your data")
@@ -49,7 +65,11 @@ if start_button:
         switch_page("Builder Tool")
         st.write("## Existing")
         st.write("You selected a file")
+        st.empty()
     else:
         switch_page("Builder Tool")
         st.write("## Error")
         st.write("You must select a file or upload a file")
+
+# st.markdown("# Home Page")
+#st.sidebar.markdown("# Home Page")
