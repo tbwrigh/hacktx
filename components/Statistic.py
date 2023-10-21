@@ -26,9 +26,14 @@ class Statistic(component.component):
             self.delete = None
 
     def display(self):
+        if self.delete:
+            return
+
         print("Statistic display")
         st.write("### Statistic")
         #selct statistic
+
+        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete())
 
         if self.stat_type != None:
             print("here" + self.stat_type)
@@ -43,25 +48,21 @@ class Statistic(component.component):
             st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
         
             self.run = st.form_submit_button("Run")
-            self.delete = st.form_submit_button("Delete")
 
             if self.run:
                 self.run_stat()
 
-            if self.delete:
-                st.form_submit_button(label="Delete", key="delete_"+self.uuid)
-
         if self.output:
             self.output.display()
-
-        if self.delete:
-            self.output = None
 
         st.write("---")
 
     def run_stat(self):
         print(self.stat_type)
         self.output = StatisticOutput(self.df, st.session_state["type_"+self.uuid], st.session_state["col1_"+self.uuid])
+    
+    def _delete(self):
+        self.delete = True
 
 class StatisticOutput(component.component):
     def __init__(self, df, type, col):
