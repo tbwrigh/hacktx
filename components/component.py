@@ -5,10 +5,11 @@ class component(ABC):
     @abstractmethod
     def __init__(self, df):
         self.df = df
-        self.count = component.count
-        component.count += 1
-
 
     @abstractmethod
     def display(self):
         pass
+
+    def get_count(self):
+        self.count += 1
+        return self.count
