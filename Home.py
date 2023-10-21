@@ -49,3 +49,6 @@ if start_button:
     else:
         st.write("## Error")
         st.write("You must select a file or upload a file")
+
+st.markdown("# Home Page")
+#st.sidebar.markdown("# Home Page")
