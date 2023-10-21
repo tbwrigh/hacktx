@@ -1,9 +1,9 @@
 # import component from same dir
-from component import component
+from . import component
 
 import streamlit as st
 
-class Graph(component):
+class Graph(component.component):
     def __init__(self, df):
         super().__init__(df)
 

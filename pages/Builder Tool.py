@@ -45,8 +45,6 @@ if add_button:
     elif section_add_select == "Neural Network":
         st.session_state["components"].append(NN.NeuralNetwork(df))
 
-print(st.session_state["components"])
-
 for component in st.session_state["components"]:
     component.display()
 

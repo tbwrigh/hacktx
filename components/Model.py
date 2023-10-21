@@ -1,13 +1,13 @@
-from component import component
+from . import component
 
 import streamlit as st
 
-class Statistic(component):
+class Model(component.component):
     def __init__(self, df):
         super().__init__(df)
-
+    
     def display(self):
-        st.write("### Statistic")
+        st.write("### Model")
         # st.write("#### Select a column to plot")
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
