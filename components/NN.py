@@ -12,4 +12,6 @@ class NN(component.component):
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
         
+        self.run = st.button("Run", key=self.get_count(), on_click=self.run_NN)
+
         st.write("---")

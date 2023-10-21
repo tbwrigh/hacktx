@@ -11,5 +11,7 @@ class Model(component.component):
         # st.write("#### Select a column to plot")
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
+
+        self.run = st.button("Run", key=self.get_count(), on_click=self.run_model)
         
         st.write("---")
