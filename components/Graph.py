@@ -15,8 +15,6 @@ class Graph(component.component):
             self.run = None
         if "output" not in tmp:
             self.output = None
-        if "selected_index_type" not in tmp:
-            self.selected_index_type = 0
         if "col1" not in tmp:
             self.col1 = None
         if "col2" not in tmp:
@@ -32,40 +30,29 @@ class Graph(component.component):
             print("here" + self.graph_type)
 
         with st.form(key="form_"+self.count, clear_on_submit=False):
-            self.graph_type = st.selectbox(
+            st.selectbox(
                     "Select a graph type", ["Line", "Bar", "Pie"], 
                     key="type_"+self.count, 
-                    index=self.selected_index_type, 
                 )
             
-            self.col1 = st.selectbox("Select a column", self.df.columns, key="col1_"+self.count)
-            self.col2 = st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.count)
+            st.selectbox("Select a column", self.df.columns, key="col1_"+self.count)
+            st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.count)
 
             self.run = st.form_submit_button("Run")
 
             st.write(st.session_state)
 
             if self.run:
-                print(st.session_state["type_"+self.count])
                 self.run_graph()
 
         if self.output:
             self.output.display()
-
-        # st.write("#### Select a column to plot")
-        # # select column
-        # col = st.selectbox("Select a column", self.df.columns)
         
         st.write("---")
     
     def run_graph(self):
         print(self.graph_type)
-        self.output = GraphOutput(self.df, self.graph_type)
-
-    def update_graph_type(self):
-        print("update graph type")
-        print(self.graph_type)
-        self.selected_index_type = ["Line", "Bar", "Pie"].index(self.graph_type)
+        self.output = GraphOutput(self.df, st.session_state["type_"+self.count], st.session_state["col1_"+self.count], st.session_state["col2_"+self.count])
 
 
 class GraphOutput(component.component):

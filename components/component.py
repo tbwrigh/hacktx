@@ -12,5 +12,5 @@ class component(ABC):
         pass
 
     def get_count(self):
-        self.count += 1
-        return self.count
+        component.count += 1
+        return component.count
