@@ -11,7 +11,7 @@ class Graph(component.component):
         tmp = vars(self)
 
         print(self.uuid)
-        
+
         if "run" not in tmp:
             self.run = None
         if "output" not in tmp:
@@ -23,14 +23,19 @@ class Graph(component.component):
         st.write("### Graph")
         # select graph type
 
-        with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            st.selectbox(
+        st.selectbox(
                     "Select a graph type", ["Line", "Bar"], 
                     key="type_"+self.uuid, 
                 )
+
+        with st.form(key="form_"+self.uuid, clear_on_submit=False):
+            
             
             st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
-            st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.uuid)
+            if st.session_state["type_"+self.uuid] == "Line":
+                st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.uuid)
+            else:
+                st.session_state["col2_"+self.uuid] = None
 
             self.run = st.form_submit_button("Run")
 
