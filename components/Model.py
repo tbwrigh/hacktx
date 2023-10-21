@@ -31,13 +31,21 @@ class Model(component.component):
             "Select a model", ["Linear Regression", "Logistic Regression", "KNN", "Decision Tree", "Random Forest"], 
             key="model_type_"+self.uuid, 
         )
-        
+
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             
             
             st.selectbox("Select Response Variable", self.df.columns, key="response_input_"+self.uuid)
 
             st.multiselect("Select Predictor Variables", self.df.columns, key="predictor_input_"+self.uuid)
+
+            if st.session_state["model_type_"+self.uuid] == "Logistic Regression":
+                st.selectbox("Select Model", ["Ridge", "Lasso", "ElasticNet"], key="penalty_input_"+self.uuid)
+            elif st.session_state["model_type_"+self.uuid] == "KNN":
+                st.number_input("Number of Neighbors", key="n_neighbors_input_"+self.uuid, min_value=1, max_value=100, value=5)
+            elif st.session_state["model_type_"+self.uuid] == "Random Forest":
+                st.number_input("Number of Trees", key="n_estimators_input_"+self.uuid, min_value=1, max_value=100, value=10)
+                st.number_input("Max Depth", key="max_depth_input_"+self.uuid, min_value=1, max_value=100, value=10)
 
             self.run = st.form_submit_button("Run")
 
