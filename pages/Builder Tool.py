@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from components import Graph, Statistic, Model, NN
+from components import Graph, Statistic, Model, NN, component
 
 st.markdown("# Builder Tool")
 #st.sidebar.markdown("# Builder Tool")
@@ -44,6 +44,8 @@ if add_button:
         st.session_state["components"].append(Model.Model(df))
     elif section_add_select == "Neural Network":
         st.session_state["components"].append(NN.NN(df))
+
+component.component.count = 0
 
 for component in st.session_state["components"]:
     component.display()
