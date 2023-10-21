@@ -5,6 +5,7 @@ class component(ABC):
     @abstractmethod
     def __init__(self, df):
         self.df = df
+        self.count = str(self.get_count())
 
     @abstractmethod
     def display(self):
