@@ -1,3 +1,4 @@
+from streamlit_extras.switch_page_button import switch_page
 import streamlit as st
 import os
 
@@ -34,6 +35,7 @@ start_button = st.button("Start")
 
 if start_button:
     if upload:
+        switch_page("Builder Tool")
         st.write("## Upload")
         st.write("You uploaded a file")
 
@@ -44,11 +46,10 @@ if start_button:
         
         
     elif existing:
+        switch_page("Builder Tool")
         st.write("## Existing")
         st.write("You selected a file")
     else:
+        switch_page("Builder Tool")
         st.write("## Error")
         st.write("You must select a file or upload a file")
-
-st.markdown("# Home Page")
-#st.sidebar.markdown("# Home Page")
