@@ -52,10 +52,37 @@ class Model(component.component):
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             
-            
-            st.selectbox("Select Response Variable", self.df.columns, key="response_input_"+self.uuid)
+            # decide on valid responses
+            if st.session_state["model_type_"+self.uuid] == "Linear Regression":
+                response_var_opts = st.session_state["quantitative_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Logistic Regression":
+                response_var_opts = st.session_state["categorical_variables"] + st.session_state["quantitative_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "KNN":
+                response_var_opts = st.session_state["categorical_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Decision Tree":
+                response_var_opts = st.session_state["categorical_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Random Forest":
+                response_var_opts = st.session_state["categorical_variables"]
+            else:
+                response_var_opts = st.session_state["quantitative_variables"] + st.session_state["categorical_variables"]
 
-            st.multiselect("Select Predictor Variables", self.df.columns, key="predictor_input_"+self.uuid)
+            # decide on predictor variables
+            if st.session_state["model_type_"+self.uuid] == "Linear Regression":
+                predictor_var_opts = st.session_state["quantitative_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Logistic Regression":
+                predictor_var_opts = st.session_state["quantitative_variables"] + st.session_state["categorical_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "KNN":
+                predictor_var_opts = st.session_state["categorical_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Decision Tree":
+                predictor_var_opts = st.session_state["quantitative_variables"] + st.session_state["categorical_variables"]
+            elif st.session_state["model_type_"+self.uuid] == "Random Forest":
+                predictor_var_opts = st.session_state["quantitative_variables"] + st.session_state["categorical_variables"]
+            else:
+                predictor_var_opts = st.session_state["quantitative_variables"] + st.session_state["categorical_variables"]
+
+            st.selectbox("Select Response Variable", response_var_opts, key="response_input_"+self.uuid)
+
+            st.multiselect("Select Predictor Variables", predictor_var_opts, key="predictor_input_"+self.uuid)
 
             st.slider("Percent Data Withheld For Testing", key="test_size_input_"+self.uuid, min_value=0.05, max_value=0.5, value=0.2, step=0.05)
 
