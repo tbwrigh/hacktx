@@ -21,7 +21,7 @@ class NN(component.component):
             return
         
         st.write("### Neural Network")
-        # st.write("#### Select a column to plot")
+        # st.write("#### SelNo resultsect a column to plot")
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
         
@@ -106,19 +106,20 @@ class Layer(component.component):
         if st.session_state["layer_type_"+self.uuid] == "Dense":
             if st.session_state["activation_"+self.uuid] == "None":
                 if input_shape:
-                    return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], input_shape=input_shape)
-                return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid])
+                    return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], input_shape=input_shape, name="dense_"+self.uuid)
+                return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], name="dense_"+self.uuid)
             if input_shape:
-                return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], activation=st.session_state["activation_"+self.uuid].lower(), input_shape=input_shape)
-            return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], activation=st.session_state["activation_"+self.uuid].lower())
+                return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], activation=st.session_state["activation_"+self.uuid].lower(), input_shape=input_shape, name="dense_"+self.uuid)
+            return tf.keras.layers.Dense(st.session_state["neurons_"+self.uuid], activation=st.session_state["activation_"+self.uuid].lower(), name="dense_"+self.uuid)
         elif st.session_state["layer_type_"+self.uuid] == "Dropout":
-            return tf.keras.layers.Dropout(st.session_state["dropout_"+self.uuid])
+            return tf.keras.layers.Dropout(st.session_state["dropout_"+self.uuid], name="dropout_"+self.uuid)
         else:
             st.write("Error: Invalid layer type")
 
 
 class NNModel(component.component):
-    def __init__(self, df, layers, inputs, output, test_size, num_epochs, type_out):
+    def __init__(self, df, layers, inputs, output, test_size, num_epochs, type_out):    
+        super().__init__(df)
         self.df = df
         self.layers = layers
         self.inputs = inputs
@@ -140,9 +141,11 @@ class NNModel(component.component):
 
             total_categories = len(y[0])
 
-            self.layers.append(tf.keras.layers.Dense(total_categories, activation="softmax"))
+            if not self.layers[-1].name.startswith("output_layer"):
+                self.layers.append(tf.keras.layers.Dense(total_categories, activation="softmax", name="output_layer_categories_"+self.uuid))
         elif self.type_out == "Regression":
-            self.layers.append(tf.keras.layers.Dense(1))
+            if not self.layers[-1].name.startswith("output_layer"):
+                self.layers.append(tf.keras.layers.Dense(1, name="output_layer_regression_"+self.uuid))
 
         model = tf.keras.Sequential(self.layers)
 

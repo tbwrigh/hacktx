@@ -25,7 +25,7 @@ st.write("## Upload your data")
 upload = False
 existing = False
 
-uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False)
+uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False, type="csv")
 if uploaded_file:
     upload = True
 
