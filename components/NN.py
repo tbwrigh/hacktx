@@ -57,10 +57,7 @@ class NN(component.component):
             # categorical, regression
             st.selectbox("Select a model type", ["Categorical", "Regression"], key="model_output_type_"+self.uuid)
 
-            self.run = st.form_submit_button("Run")
-
-            if self.run:
-                self.run_NN()
+            self.run = st.form_submit_button("Run", on_click=self.run_NN)
 
         if self.output:
             self.output.display()
@@ -127,6 +124,9 @@ class NNModel(component.component):
         self.test_size = test_size
         self.num_epochs = num_epochs
         self.type_out = type_out
+        self.results = None
+        self.model = None
+        self.model_name = None
 
     def display(self):
         st.write("### Neural Network Output")
@@ -147,24 +147,38 @@ class NNModel(component.component):
             if not self.layers[-1].name.startswith("output_layer"):
                 self.layers.append(tf.keras.layers.Dense(1, name="output_layer_regression_"+self.uuid))
 
-        model = tf.keras.Sequential(self.layers)
+        # determine if model is sequential and already has correct layers
+        if not (self.model and self.model.layers == self.layers):
+            self.model = tf.keras.Sequential(self.layers)
 
-        # select loss based on type_out
-        if self.type_out == "Categorical":
-            model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        elif self.type_out == "Regression":
-            model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
+            # select loss based on type_out
+            if self.type_out == "Categorical":
+                self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+            elif self.type_out == "Regression":
+                self.model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
 
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size)
 
-        # train model
-        model.fit(X_train, y_train, epochs=self.num_epochs)
+            # train model
+            self.model.fit(X_train, y_train, epochs=self.num_epochs)
+
+            self.results = self.model.evaluate(X_test, y_test)
+        
+            name = st.session_state["selected_file"] + "_" + "_".join(self.inputs)+"_"+self.output+"_"+str(self.test_size)+"_"+str(self.num_epochs)+".h5"
+            self.model.save("models/"+name)
+
+            self.model_name = name
 
         # evaluate model
-        st.write(model.evaluate(X_test, y_test))
+        if self.type_out == "Categorical" and self.results:
+            st.write(f"Accuracy: {self.results[1]}")
+        elif self.type_out == "Regression" and self.results:
+            st.write(f"MSE: {self.results[0]}")
 
-        # save model
-        name = st.session_state["selected_file"] + "_" + "_".join(self.inputs)+"_"+self.output+"_"+str(self.test_size)+"_"+str(self.num_epochs)+".h5"
-        model.save("models/"+name)
-        
+
+        if self.model_name:
+            # save model
+            with open("models/"+self.model_name, "rb") as f:
+                bytes_data = f.read()
+                st.download_button('Download Model', f, file_name=self.model_name)
