@@ -23,12 +23,15 @@ class Graph(component.component):
     def display(self):
         if self.delete:
             return
-        
+
         print("Graph display")
-        st.write("### Graph")
+        
+        col1_container, col2_container = st.columns(2)
+        
+        col1_container.write("### Graph")
         # select graph type
 
-        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
+        col2_container.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         graph_type = st.selectbox(
                     "Select a graph type", ["Line", "Bar", "Scatter plot"], 

@@ -27,11 +27,13 @@ class Statistic(component.component):
         if self.delete:
             return
 
+        col1_container, col2_container = st.columns(2)
+
         print("Statistic display")
-        st.write("### Statistic")
+        col1_container.write("### Statistic")
         #selct statistic
 
-        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
+        col2_container.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         stat_type = st.selectbox(
                 "Select a statistic", ["Mean", "Median", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],

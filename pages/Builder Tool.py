@@ -15,6 +15,18 @@ st.set_page_config(
 st.markdown("# Flow Studio")
 #st.sidebar.markdown("# Builder Tool")
 
+st.markdown(
+    """
+    <style>
+
+        div[data-testid="column"]:nth-of-type(2)
+        {
+            text-align: end;
+        } 
+    </style>
+    """,unsafe_allow_html=True
+)
+
 try :
     st.write("## " + st.session_state["selected_file"])
 except:
@@ -27,10 +39,11 @@ data_type = df.dtypes
 categorical = []
 quantitative = []
 for col, dtype in data_type.items():
-    if dtype == "object":
-        categorical.append(col)
-    elif dtype in ["int64", "float64"]:
+    if any(str(dtype).startswith(s) for s in ["int", "float"]):
         quantitative.append(col)
+    else:
+        categorical.append(col)
+    
 st.session_state["categorical_variables"] = categorical
 st.session_state["quantitative_variables"] = quantitative
 

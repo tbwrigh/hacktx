@@ -19,15 +19,17 @@ class NN(component.component):
     def display(self):
         if self.delete:
             return
+
+        col1_container, col2_container = st.columns(2)
         
-        st.write("### Neural Network")
+        col1_container.write("### Neural Network")
         # st.write("#### SelNo resultsect a column to plot")
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
         
         # num layers input
 
-        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
+        col2_container.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         st.number_input("Number of layers", key="num_layers_"+self.uuid, min_value=2, max_value=10, step=1)
 

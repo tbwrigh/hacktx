@@ -39,9 +39,11 @@ class Model(component.component):
         if self.delete:
             return
         
-        st.write("### Model")
+        col1_container, col2_container = st.columns(2)
 
-        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
+        col1_container.write("### Model")
+
+        col2_container.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         st.selectbox(
             "Select a model", ["Linear Regression", "Logistic Regression", "KNN", "Decision Tree", "Random Forest"], 
