@@ -38,7 +38,7 @@ class Statistic(component.component):
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             st.selectbox(
-                    "Select a statistic", ["Mean", "Median", "Percentile", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
+                    "Select a statistic", ["Mean", "Median", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
                     key="type_"+self.uuid,
                 )
         
@@ -88,3 +88,14 @@ class StatisticOutput(component.component):
         elif self.stat_type == "Standard Deviation":
             df2 = self.df[self.col].std()
             st.write(f"Standard Deviation: {df2}")
+        
+        elif self.stat_type == "Proportion":
+            value_counts = self.df[self.col].value_counts()
+
+            frequency = value_counts.to_dict()
+
+            num_rows = len(self.df)
+
+            for key, value in frequency.items():
+                proportion = value/num_rows
+                st.write(f"Proportion of {key} = {proportion}")
