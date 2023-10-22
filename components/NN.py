@@ -12,14 +12,22 @@ class NN(component.component):
         self.layers = []
 
         self.output = None
+
+        if "delete" not in self.layers:
+            self.delete = None
     
     def display(self):
+        if self.delete:
+            return
+        
         st.write("### Neural Network")
         # st.write("#### Select a column to plot")
         # # select column
         # col = st.selectbox("Select a column", self.df.columns)
         
         # num layers input
+
+        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         st.number_input("Number of layers", key="num_layers_"+self.uuid, min_value=2, max_value=10, step=1)
 
@@ -69,7 +77,9 @@ class NN(component.component):
                 layers.append(self.layers[layer_i].getLayer())
                         
         self.output = NNModel(self.df, layers, st.session_state["inputs_"+self.uuid], st.session_state["output_"+self.uuid], st.session_state["test_size_"+self.uuid], st.session_state["num_epochs_"+self.uuid], st.session_state["model_output_type_"+self.uuid])
-        
+
+    def _delete(self):
+        self.delete = True
 
 class Layer(component.component):
     def __init__(self, df):

@@ -31,11 +31,17 @@ class Model(component.component):
             self.run = None
         if "output" not in tmp:
             self.output = None
+        if "delete" not in tmp:
+            self.delete = None
 
     
     def display(self):
+        if self.delete:
+            return
+        
         st.write("### Model")
 
+        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         st.selectbox(
             "Select a model", ["Linear Regression", "Logistic Regression", "KNN", "Decision Tree", "Random Forest"], 
@@ -71,6 +77,9 @@ class Model(component.component):
 
     def run_model(self):
         self.output = ModelOutput(self.df, st.session_state["model_type_"+self.uuid], st.session_state["response_input_"+self.uuid], st.session_state["predictor_input_"+self.uuid], self.uuid)
+
+    def _delete(self):
+        self.delete = True
 
 class ModelOutput(component.component):
     def __init__(self, df, model_type, resp, preds, parent_uuid):
