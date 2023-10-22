@@ -16,20 +16,29 @@ class Graph(component.component):
             self.run = None
         if "output" not in tmp:
             self.output = None
-
+        if "delete" not in tmp:
+            self.delete = None
 
     def display(self):
+        if self.delete:
+            return
+        
         print("Graph display")
         st.write("### Graph")
         # select graph type
 
-        st.selectbox(
+        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
+        
+        # st.selectbox(
+        #             "Select a graph type", ["Line", "Bar"], 
+        #             key="type_"+self.uuid, 
+        #         )
+
+        with st.form(key="form_"+self.uuid, clear_on_submit=False):
+            st.selectbox(
                     "Select a graph type", ["Line", "Bar"], 
                     key="type_"+self.uuid, 
                 )
-
-        with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            
             
             st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
             if st.session_state["type_"+self.uuid] == "Line":
@@ -52,6 +61,8 @@ class Graph(component.component):
     def run_graph(self):
         self.output = GraphOutput(self.df, st.session_state["type_"+self.uuid], st.session_state["col1_"+self.uuid], st.session_state["col2_"+self.uuid])
 
+    def _delete(self):
+        self.delete = True
 
 class GraphOutput(component.component):
     def __init__(self, df, type, col1, col2):

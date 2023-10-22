@@ -9,9 +9,7 @@ class Statistic(component.component):
         super().__init__(df)
         print("Statistic init")
         tmp = vars(self)
-        # self.stat_type = None
-        # self.run = None
-        # self.output = None
+        
         print(self.uuid)
 
         if "stat_type" not in tmp:
@@ -33,7 +31,7 @@ class Statistic(component.component):
         st.write("### Statistic")
         #selct statistic
 
-        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete())
+        st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
         if self.stat_type != None:
             print("here" + self.stat_type)
