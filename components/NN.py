@@ -44,7 +44,7 @@ class NN(component.component):
             st.number_input("Test size", key="test_size_"+self.uuid, min_value=0.05, max_value=0.5, step=0.05)
 
             # num epochs
-            st.number_input("Number of epochs", key="num_epochs_"+self.uuid, min_value=1, max_value=100, step=1)
+            st.number_input("Number of epochs", key="num_epochs_"+self.uuid, min_value=1, max_value=250, step=1)
 
             # categorical, regression
             st.selectbox("Select a model type", ["Categorical", "Regression"], key="model_output_type_"+self.uuid)
