@@ -6,7 +6,13 @@ import pandas as pd
 
 from components import Graph, Statistic, Model, NN, component
 
-st.markdown("# Builder Tool")
+st.set_page_config(
+    initial_sidebar_state="collapsed",
+    page_title="Flow Studio",
+    page_icon="logo_icon.png",  # Replace with the path to your local icon file
+)
+
+st.markdown("# Flow Studio")
 #st.sidebar.markdown("# Builder Tool")
 
 try :

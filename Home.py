@@ -3,7 +3,11 @@ from io import BytesIO
 import streamlit as st
 import os
 
-st.set_page_config(initial_sidebar_state="collapsed")
+st.set_page_config(
+    initial_sidebar_state="collapsed",
+    page_title="KeiFlow",
+    page_icon="logo_icon.png",  # Replace with the path to your local icon file
+)
 
 st.markdown(
     """

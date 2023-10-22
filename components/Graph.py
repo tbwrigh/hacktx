@@ -72,6 +72,10 @@ class GraphOutput(component.component):
     def display(self):
         st.write("### Graph Output")
 
+        if self.col1 == None:
+            st.write("Please select a column")
+            return
+
         if self.graph_type == "Line":
             self.line_graph()
         elif self.graph_type == "Bar":
