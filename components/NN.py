@@ -166,5 +166,5 @@ class NNModel(component.component):
 
         # save model
         name = st.session_state["selected_file"] + "_" + "_".join(self.inputs)+"_"+self.output+"_"+str(self.test_size)+"_"+str(self.num_epochs)+".h5"
-        model.save(name)
+        model.save("models/"+name)
         
