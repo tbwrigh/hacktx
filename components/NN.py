@@ -45,7 +45,7 @@ class NN(component.component):
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
 
             # define inputs 
-            st.multiselect("Select inputs", self.df.columns, key="inputs_"+self.uuid)
+            st.multiselect("Select inputs", st.session_state['quantitative_variables'], key="inputs_"+self.uuid)
 
             # define output
             st.selectbox("Select output", self.df.columns, key="output_"+self.uuid)
