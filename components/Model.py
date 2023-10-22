@@ -90,6 +90,7 @@ class ModelOutput(component.component):
         self.model = None
         self.prediction = None
         self.parent_uuid = parent_uuid
+        self.cat_maps = {}
 
     def display(self):
         st.write("### Model Output")
@@ -180,7 +181,9 @@ class ModelOutput(component.component):
         # map predictor variables to numbers
         for pred in self.preds:
             if X[pred].dtype == "object":
+                category_map = dict(enumerate(X[pred].astype("category").cat.categories))
                 X[pred] = X[pred].astype("category").cat.codes
+                self.cat_maps[pred] = category_map
         
         y = self.df[self.resp]
 
@@ -227,7 +230,9 @@ class ModelOutput(component.component):
         # map predictor variables to numbers
         for pred in self.preds:
             if X[pred].dtype == "object":
+                category_map = dict(enumerate(X[pred].astype("category").cat.categories))
                 X[pred] = X[pred].astype("category").cat.codes
+                self.cat_maps[pred] = category_map
 
         y = self.df[self.resp]
 
@@ -272,7 +277,9 @@ class ModelOutput(component.component):
         # map predictor variables to numbers
         for pred in self.preds:
             if X[pred].dtype == "object":
+                category_map = dict(enumerate(X[pred].astype("category").cat.categories))
                 X[pred] = X[pred].astype("category").cat.codes
+                self.cat_maps[pred] = category_map
 
         y = self.df[self.resp]
 
@@ -312,7 +319,10 @@ class ModelOutput(component.component):
         with st.form(key="predict_form_"+self.uuid, clear_on_submit=False):
             st.write("### Predict")
             for pred in self.preds:
-                st.number_input("Input " + pred, key="predict_input_"+pred+"_"+self.uuid)
+                if pred in self.cat_maps:
+                    st.selectbox("Input " + pred, self.cat_maps[pred].values(), key="predict_input_"+pred+"_"+self.uuid)
+                else:
+                    st.number_input("Input " + pred, key="predict_input_"+pred+"_"+self.uuid)
             
             predict_button = st.form_submit_button("Predict")
 
@@ -320,6 +330,14 @@ class ModelOutput(component.component):
                 self.predict()
     
     def predict(self):
-        self.prediction = self.model.predict([[st.session_state["predict_input_"+pred+"_"+self.uuid] for pred in self.preds]])
+        row = []
+        for pred in self.preds:
+            val = st.session_state["predict_input_"+pred+"_"+self.uuid]
+            if pred in self.cat_maps:
+                reversed_map = {v: k for k, v in self.cat_maps[pred].items()}
+                row.append(reversed_map[val])
+            else:
+                row.append(val)
+        self.prediction = self.model.predict([row])
 
     
