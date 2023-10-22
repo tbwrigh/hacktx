@@ -2,6 +2,9 @@
 from . import component
 
 import streamlit as st
+import pandas as pd
+
+#line = 2 q, bar = 1 c, scatter = 2 q
 
 class Graph(component.component):
 
@@ -23,32 +26,40 @@ class Graph(component.component):
         if self.delete:
             return
         
+        data_type = self.df.dtypes
+        categorical = []
+        quantitative = []
+        for col, dtype in data_type.items():
+            if dtype == "object":
+                categorical.append(col)
+            elif dtype in ["int64", "float64"]:
+                quantitative.append(col)
+            else:
+                continue
+        
         print("Graph display")
         st.write("### Graph")
         # select graph type
 
         st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
-        
-        # st.selectbox(
-        #             "Select a graph type", ["Line", "Bar"], 
-        #             key="type_"+self.uuid, 
-        #         )
 
-        with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            st.selectbox(
-                    "Select a graph type", ["Line", "Bar"], 
+        graph_type = st.selectbox(
+                    "Select a graph type", ["Line", "Bar", "Scatter plot"], 
                     key="type_"+self.uuid, 
                 )
-            
-            st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
-            if st.session_state["type_"+self.uuid] == "Line":
-                st.selectbox("Select a column (Only Used for Line)", self.df.columns, key="col2_"+self.uuid)
-            else:
+
+        with st.form(key="form_"+self.uuid, clear_on_submit=False):
+            if graph_type == "Line":
+                st.selectbox("Select a column", quantitative, key="col1_"+self.uuid)
+                st.selectbox("Select a second column", quantitative, key="col2_"+self.uuid)
+            elif graph_type == "Bar":
+                st.selectbox("Select a column", categorical, key="col1_"+self.uuid)
                 st.session_state["col2_"+self.uuid] = None
+            elif graph_type == "Scatter plot":
+                st.selectbox("Select a column", quantitative, key="col1_"+self.uuid)
+                st.selectbox("Select a second column", quantitative, key="col2_"+self.uuid)
 
             self.run = st.form_submit_button("Run")
-
-            # st.write(st.session_state)
 
             if self.run:
                 self.run_graph()
@@ -78,6 +89,8 @@ class GraphOutput(component.component):
             self.line_graph()
         elif self.graph_type == "Bar":
             self.bar_graph()
+        elif self.graph_type == "Scatter plot":
+            self.scatter_graph()
     
     def line_graph(self):
         st.line_chart(data=self.df, x=self.col1, y=self.col2)
@@ -85,3 +98,8 @@ class GraphOutput(component.component):
     def bar_graph(self):
         counts_df = self.df[self.col1].value_counts().reset_index()
         st.bar_chart(data=counts_df, x=self.col1, y="count")
+    
+    def scatter_graph(self):
+        self.df[self.col1] = pd.to_numeric(self.df[self.col1], errors='coerce')
+        self.df[self.col2] = pd.to_numeric(self.df[self.col2], errors='coerce')
+        st.scatter_chart(data=self.df, x=self.col1, y=self.col2)
