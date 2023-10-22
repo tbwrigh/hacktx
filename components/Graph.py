@@ -4,8 +4,6 @@ from . import component
 import streamlit as st
 import pandas as pd
 
-#line = 2 q, bar = 1 c, scatter = 2 q
-
 class Graph(component.component):
 
     def __init__(self, df):
@@ -26,17 +24,6 @@ class Graph(component.component):
         if self.delete:
             return
         
-        data_type = self.df.dtypes
-        categorical = []
-        quantitative = []
-        for col, dtype in data_type.items():
-            if dtype == "object":
-                categorical.append(col)
-            elif dtype in ["int64", "float64"]:
-                quantitative.append(col)
-            else:
-                continue
-        
         print("Graph display")
         st.write("### Graph")
         # select graph type
@@ -50,14 +37,14 @@ class Graph(component.component):
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
             if graph_type == "Line":
-                st.selectbox("Select a column", quantitative, key="col1_"+self.uuid)
-                st.selectbox("Select a second column", quantitative, key="col2_"+self.uuid)
+                st.selectbox("Select a column", st.session_state["quantitative_variables"], key="col1_"+self.uuid)
+                st.selectbox("Select a second column", st.session_state["quantitative_variables"], key="col2_"+self.uuid)
             elif graph_type == "Bar":
-                st.selectbox("Select a column", categorical, key="col1_"+self.uuid)
+                st.selectbox("Select a column", st.session_state["categorical_variables"], key="col1_"+self.uuid)
                 st.session_state["col2_"+self.uuid] = None
             elif graph_type == "Scatter plot":
-                st.selectbox("Select a column", quantitative, key="col1_"+self.uuid)
-                st.selectbox("Select a second column", quantitative, key="col2_"+self.uuid)
+                st.selectbox("Select a column", st.session_state["quantitative_variables"], key="col1_"+self.uuid)
+                st.selectbox("Select a second column", st.session_state["quantitative_variables"], key="col2_"+self.uuid)
 
             self.run = st.form_submit_button("Run")
 

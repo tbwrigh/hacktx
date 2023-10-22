@@ -33,17 +33,25 @@ class Statistic(component.component):
 
         st.button("Delete", key="del_button_"+self.uuid, on_click=self._delete)
 
+        stat_type = st.selectbox(
+                "Select a statistic", ["Mean", "Median", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
+                key="type_"+self.uuid,
+                )
+
         if self.stat_type != None:
             print("here" + self.stat_type)
 
         with st.form(key="form_"+self.uuid, clear_on_submit=False):
-            st.selectbox(
-                    "Select a statistic", ["Mean", "Median", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
-                    key="type_"+self.uuid,
-                )
-        
+            # st.selectbox(
+            #         "Select a statistic", ["Mean", "Median", "Proportion", "Quartiles 1 and 3", "Standard Deviation"],
+            #         key="type_"+self.uuid,
+            #     )
+            if stat_type == "Mean" or stat_type == "Median" or stat_type == "Quartiles 1 and 3" or stat_type == "Standard Deviation":
+                st.selectbox("Select a column", st.session_state["quantitative_variables"], key="col1_"+self.uuid)
+            elif stat_type == "Proportion":
+                st.selectbox("Select a column", st.session_state["categorical_variables"], key="col1_"+self.uuid)
         # select column
-            st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
+            # st.selectbox("Select a column", self.df.columns, key="col1_"+self.uuid)
         
             self.run = st.form_submit_button("Run")
 

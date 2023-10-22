@@ -17,6 +17,17 @@ except:
 # read file
 df = pd.read_csv(os.path.join("datasets/", st.session_state["selected_file"]))
 
+data_type = df.dtypes
+categorical = []
+quantitative = []
+for col, dtype in data_type.items():
+    if dtype == "object":
+        categorical.append(col)
+    elif dtype in ["int64", "float64"]:
+        quantitative.append(col)
+st.session_state["categorical_variables"] = categorical
+st.session_state["quantitative_variables"] = quantitative
+
 st.write("### Preview of data")
 st.write(df.head())
 
