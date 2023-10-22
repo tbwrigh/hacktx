@@ -1,4 +1,5 @@
 from streamlit_extras.switch_page_button import switch_page
+from io import BytesIO
 import streamlit as st
 import os
 
@@ -18,17 +19,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.write("# Welcome to Auto ML")
+st.write("# Welcome to KeiFlow")
 
 st.write("## Upload your data")
 
 upload = False
 existing = False
 
-uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False)
+uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False, type = 'csv')
 if uploaded_file:
     upload = True
-
 
 st.write("## Or Select a dataset from the list")
 
