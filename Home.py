@@ -34,7 +34,7 @@ uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=Fals
 if uploaded_file:
     upload = True
 
-st.write("## Or Select a dataset from the list")
+st.write("## Or Select an Existing Dataset")
 
 # get files in datasets folder
 files = os.listdir("datasets/")
